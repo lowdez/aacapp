@@ -129,6 +129,8 @@
 
   /* Category colors */
   .cat-btn[data-cat="מועדפים"].active { background: linear-gradient(135deg, #FFD93D, #FF9A3C); }
+  .cat-btn[data-cat="בוקר"].active     { background: linear-gradient(135deg, #f9d423, #f83600); }
+  .cat-btn[data-cat="לילה"].active     { background: linear-gradient(135deg, #2c3e50, #4a6fa5); }
   .cat-btn[data-cat="יומיום"].active   { background: linear-gradient(135deg, #6BCB77, #4D9DE0); }
   .cat-btn[data-cat="פעלים"].active    { background: linear-gradient(135deg, #F7971E, #FFD200); }
   .cat-btn[data-cat="רגשות"].active    { background: linear-gradient(135deg, #FF6B9D, #FF9A3C); }
@@ -199,6 +201,8 @@
   }
 
   /* Color themes per category */
+  .card[data-cat="בוקר"]     { --card-accent: #f9d423; }
+  .card[data-cat="לילה"]     { --card-accent: #4a6fa5; }
   .card[data-cat="יומיום"]   { --card-accent: #6BCB77; }
   .card[data-cat="פעלים"]    { --card-accent: #F7971E; }
   .card[data-cat="רגשות"]    { --card-accent: #FF6B9D; }
@@ -308,6 +312,14 @@
     from { opacity: 0; transform: scale(0.6); }
     to   { opacity: 1; transform: scale(1); }
   }
+
+  @keyframes shakeStrip {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-8px); }
+    40%     { transform: translateX(8px); }
+    60%     { transform: translateX(-5px); }
+    80%     { transform: translateX(5px); }
+  }
   .sentence-chip .chip-emoji { font-size: 1.3rem; }
   .sentence-chip .chip-remove {
     background: none;
@@ -372,6 +384,21 @@
   .card.in-sentence {
     border-color: #a855f7;
     background: #fdf4ff;
+  }
+  .card.card-blocked {
+    opacity: 0.45;
+    filter: grayscale(60%);
+    cursor: not-allowed !important;
+    border-color: #e74c3c !important;
+    background: #fff5f5 !important;
+  }
+  .card.card-blocked::after {
+    content: '🚫';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    pointer-events: none;
   }
   .card.in-sentence .card-check {
     display: flex !important;
@@ -756,6 +783,70 @@ const CARDS = [
   { cat: "גמילה", emoji: "🎉", label: "יופי שניסיתי" },
   { cat: "גמילה", emoji: "💪", label: "אני מתאמן" },
 
+  // ===== בוקר - להתארגן לגן =====
+  { cat: "בוקר", emoji: "⏰", label: "להתעורר" },
+  { cat: "בוקר", emoji: "☀️", label: "בוקר טוב" },
+  { cat: "בוקר", emoji: "🛏️", label: "לקום מהמיטה" },
+  { cat: "בוקר", emoji: "🚽", label: "ללכת לשירותים" },
+  { cat: "בוקר", emoji: "🪥", label: "לצחצח שיניים" },
+  { cat: "בוקר", emoji: "🚿", label: "להתרחץ" },
+  { cat: "בוקר", emoji: "👕", label: "להתלבש" },
+  { cat: "בוקר", emoji: "🧦", label: "לנעול גרביים" },
+  { cat: "בוקר", emoji: "👟", label: "לנעול נעליים" },
+  { cat: "בוקר", emoji: "💇", label: "לסרק שיער" },
+  { cat: "בוקר", emoji: "🥣", label: "לאכול ארוחת בוקר" },
+  { cat: "בוקר", emoji: "🥛", label: "לשתות חלב" },
+  { cat: "בוקר", emoji: "🧃", label: "לשתות מיץ" },
+  { cat: "בוקר", emoji: "🎒", label: "לקחת תיק" },
+  { cat: "בוקר", emoji: "📦", label: "לארוז אוכל לגן" },
+  { cat: "בוקר", emoji: "🧴", label: "לשים קרם" },
+  { cat: "בוקר", emoji: "🧣", label: "לשים צעיף" },
+  { cat: "בוקר", emoji: "🧥", label: "ללבוש מעיל" },
+  { cat: "בוקר", emoji: "💊", label: "לקחת תרופה" },
+  { cat: "בוקר", emoji: "🚗", label: "ללכת לרכב" },
+  { cat: "בוקר", emoji: "🚌", label: "לחכות לאוטובוס" },
+  { cat: "בוקר", emoji: "👋", label: "להגיד שלום לאמא" },
+  { cat: "בוקר", emoji: "🏫", label: "להגיע לגן" },
+  { cat: "בוקר", emoji: "🙂", label: "אני מוכן" },
+  { cat: "בוקר", emoji: "⌛", label: "עוד קצת" },
+  { cat: "בוקר", emoji: "😴", label: "אני עדיין עייף" },
+  { cat: "בוקר", emoji: "🍌", label: "רוצה לאכול עוד" },
+  { cat: "בוקר", emoji: "🔢", label: "שלב ראשון" },
+  { cat: "בוקר", emoji: "2️⃣", label: "שלב שני" },
+  { cat: "בוקר", emoji: "✅", label: "סיימתי" },
+
+  // ===== לילה - להתארגן לישון =====
+  { cat: "לילה", emoji: "🌙", label: "זמן שינה" },
+  { cat: "לילה", emoji: "📺", label: "לכבות טלוויזיה" },
+  { cat: "לילה", emoji: "📱", label: "לכבות מסך" },
+  { cat: "לילה", emoji: "🍽️", label: "ארוחת ערב" },
+  { cat: "לילה", emoji: "🪥", label: "לצחצח שיניים" },
+  { cat: "לילה", emoji: "🚽", label: "ללכת לשירותים" },
+  { cat: "לילה", emoji: "🚿", label: "להתרחץ" },
+  { cat: "לילה", emoji: "🛁", label: "אמבטיה" },
+  { cat: "לילה", emoji: "👗", label: "ללבוש פיג׳מה" },
+  { cat: "לילה", emoji: "🧸", label: "לקחת בובה" },
+  { cat: "לילה", emoji: "🛏️", label: "להיכנס למיטה" },
+  { cat: "לילה", emoji: "📚", label: "סיפור לפני שינה" },
+  { cat: "לילה", emoji: "💡", label: "לכבות אור" },
+  { cat: "לילה", emoji: "🌟", label: "אור לילה" },
+  { cat: "לילה", emoji: "😴", label: "לעצום עיניים" },
+  { cat: "לילה", emoji: "💊", label: "לקחת תרופה" },
+  { cat: "לילה", emoji: "💧", label: "לשתות מים" },
+  { cat: "לילה", emoji: "😨", label: "פחד מחושך" },
+  { cat: "לילה", emoji: "🤗", label: "רוצה חיבוק" },
+  { cat: "לילה", emoji: "🧸", label: "רוצה בובה" },
+  { cat: "לילה", emoji: "🚪", label: "לפתוח דלת קצת" },
+  { cat: "לילה", emoji: "🎵", label: "מוזיקה לשינה" },
+  { cat: "לילה", emoji: "😌", label: "שקט ונעים" },
+  { cat: "לילה", emoji: "🌡️", label: "חם לי מדי" },
+  { cat: "לילה", emoji: "🥶", label: "קר לי" },
+  { cat: "לילה", emoji: "🤒", label: "לא מרגיש טוב" },
+  { cat: "לילה", emoji: "🔄", label: "להתהפך" },
+  { cat: "לילה", emoji: "🌈", label: "חלום טוב" },
+  { cat: "לילה", emoji: "✅", label: "אני מוכן לישון" },
+  { cat: "לילה", emoji: "❌", label: "אני לא עייף" },
+
   // ===== אסור =====
   // פגיעה בגוף
   { cat: "אסור", emoji: "🦵", label: "לא לבעוט" },
@@ -835,6 +926,8 @@ const CARDS = [
 
 const CATEGORIES = [
   { name: "מועדפים",  icon: "⭐" },
+  { name: "בוקר",     icon: "🌅" },
+  { name: "לילה",     icon: "🌙" },
   { name: "יומיום",   icon: "☀️" },
   { name: "פעלים",    icon: "🤲" },
   { name: "רגשות",    icon: "❤️" },
@@ -850,6 +943,11 @@ let currentCat = "יומיום";
 let speakingCard = null;
 let sentenceMode = false;
 let sentence = []; // array of {emoji, label}
+
+const MAX_SENTENCE = 8;
+const MAX_REPEATS = 4;       // max times same card can appear in sentence
+const REPEAT_COOLDOWN = 1000; // ms cooldown after hitting repeat limit
+const cardLastTap = {};       // label -> timestamp of last block
 
 // Build category nav
 const nav = document.getElementById('categoryNav');
@@ -902,14 +1000,15 @@ function renderCards() {
     el.style.animationDelay = `${i * 0.05}s`;
 
     const isFav = favorites.includes(card.label);
-    const isInSentence = sentence.some(s => s.label === card.label);
+    const countInSentence = sentence.filter(s => s.label === card.label).length;
     el.innerHTML = `
       <div class="card-check">✓</div>
       <button class="fav-btn ${isFav ? 'active' : ''}" aria-label="הוסף למועדפים" title="מועדף">⭐</button>
       <div class="emoji">${card.emoji}</div>
       <div class="label">${card.label}</div>
     `;
-    if (isInSentence) el.classList.add('in-sentence');
+    if (countInSentence > 0) el.classList.add('in-sentence');
+    if (countInSentence >= MAX_REPEATS) el.classList.add('card-blocked');
 
     el.addEventListener('click', (e) => {
       if (e.target.closest('.fav-btn')) return;
@@ -1012,20 +1111,62 @@ modeToggle.addEventListener('change', () => {
 });
 
 function addToSentence(card, el) {
+  // ── 1. Max sentence length ──
+  if (sentence.length >= MAX_SENTENCE) {
+    shakeStrip();
+    flashCard(el, '#e74c3c', '#fff0f0');
+    return;
+  }
+
+  // ── 2. Hard repeat limit — count current uses of this label ──
+  const repeatCount = sentence.filter(s => s.label === card.label).length;
+  if (repeatCount >= MAX_REPEATS) {
+    flashCard(el, '#e74c3c', '#fff0f0');
+    shakeStrip();
+    return;
+  }
+
   sentence.push({ emoji: card.emoji, label: card.label });
-  el.classList.add('in-sentence');
-  renderSentenceStrip();
-  // small bounce feedback
+  renderSentenceStrip();         // updates chips + counter
+  syncCardSentenceState(el, card.label);
   el.style.transform = 'scale(0.92)';
   setTimeout(() => el.style.transform = '', 150);
 }
 
+// Sync visual state of a card element based on current sentence
+function syncCardSentenceState(el, label) {
+  const count = sentence.filter(s => s.label === label).length;
+  if (count > 0) {
+    el.classList.add('in-sentence');
+  } else {
+    el.classList.remove('in-sentence');
+  }
+  if (count >= MAX_REPEATS) {
+    el.classList.add('card-blocked');
+  } else {
+    el.classList.remove('card-blocked');
+  }
+}
+
+function flashCard(el, borderColor, bgColor) {
+  el.style.outline = `3px solid ${borderColor}`;
+  el.style.background = bgColor;
+  el.style.transition = 'none';
+  setTimeout(() => {
+    el.style.outline = '';
+    el.style.background = '';
+    el.style.transition = '';
+  }, 700);
+}
+
 function renderSentenceStrip() {
   sentenceWords.innerHTML = '';
+
   if (sentence.length === 0) {
     sentenceWords.appendChild(sentencePlaceholder);
     btnSpeak.disabled = true;
     btnClear.disabled = true;
+    updateSentenceCounter();
     return;
   }
   btnSpeak.disabled = false;
@@ -1042,18 +1183,47 @@ function renderSentenceStrip() {
     chip.querySelector('.chip-remove').addEventListener('click', () => {
       sentence.splice(idx, 1);
       renderSentenceStrip();
-      // un-highlight cards with this label if none left
-      const stillIn = sentence.some(s => s.label === item.label);
-      if (!stillIn) {
-        document.querySelectorAll('.card.in-sentence').forEach(c => {
-          if (c.querySelector('.label').textContent === item.label) {
-            c.classList.remove('in-sentence');
-          }
-        });
-      }
+      syncAllCardStates();
     });
     sentenceWords.appendChild(chip);
   });
+
+  updateSentenceCounter();
+}
+
+// Re-sync ALL visible cards after any sentence change
+function syncAllCardStates() {
+  document.querySelectorAll('.card').forEach(cardEl => {
+    const label = cardEl.querySelector('.label')?.textContent;
+    if (!label) return;
+    const count = sentence.filter(s => s.label === label).length;
+    cardEl.classList.toggle('in-sentence', count > 0);
+    cardEl.classList.toggle('card-blocked', count >= MAX_REPEATS);
+  });
+}
+
+function updateSentenceCounter() {
+  let counter = document.getElementById('sentenceCounter');
+  if (!counter) {
+    counter = document.createElement('div');
+    counter.id = 'sentenceCounter';
+    counter.style.cssText = `
+      font-size:0.8rem; font-weight:700; color:#aaa;
+      white-space:nowrap; padding: 0 4px; flex-shrink:0;
+    `;
+    sentenceWords.parentNode.insertBefore(counter, document.querySelector('.strip-actions'));
+  }
+  const n = sentence.length;
+  counter.textContent = `${n} / ${MAX_SENTENCE}`;
+  counter.style.color = n >= MAX_SENTENCE ? '#e74c3c' : n >= 6 ? '#FF9A3C' : '#aaa';
+}
+
+function shakeStrip() {
+  const strip = document.getElementById('sentenceStrip');
+  strip.style.animation = 'none';
+  strip.offsetHeight; // reflow
+  strip.style.animation = 'shakeStrip 0.4s ease';
+  setTimeout(() => strip.style.animation = '', 400);
 }
 
 btnSpeak.addEventListener('click', () => {
@@ -1064,8 +1234,9 @@ btnSpeak.addEventListener('click', () => {
 
 btnClear.addEventListener('click', () => {
   sentence = [];
+  Object.keys(cardLastTap).forEach(k => delete cardLastTap[k]);
   renderSentenceStrip();
-  document.querySelectorAll('.card.in-sentence').forEach(c => c.classList.remove('in-sentence'));
+  syncAllCardStates();
 });
 
 // Load voices async
