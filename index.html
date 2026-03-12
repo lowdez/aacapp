@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מילות קסם - לוח תקשורת</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFF8F0;
+    --sky: #E8F4FD;
+    --card-radius: 24px;
+    --shadow: 0 8px 24px rgba(0,0,0,0.10);
+    --shadow-hover: 0 16px 40px rgba(0,0,0,0.18);
+    --transition: 0.18s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, #FF6B9D 0%, #FF9A3C 50%, #FFD93D 100%);
+    padding: 18px 24px 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 20px rgba(255,107,157,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header .logo {
+    font-size: 2.2rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    letter-spacing: -0.5px;
+  }
+
+  header .subtitle {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  /* ===== SPEECH INDICATOR ===== */
+  .speaking-bar {
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 30px;
+    padding: 8px 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .speaking-bar.active { opacity: 1; }
+  .speaking-bar span { color: white; font-weight: 700; font-size: 0.9rem; }
+  .wave { display: flex; gap: 3px; align-items: center; }
+  .wave div {
+    width: 4px;
+    background: white;
+    border-radius: 4px;
+    animation: wave 0.8s ease-in-out infinite;
+  }
+  .wave div:nth-child(1) { height: 8px; animation-delay: 0s; }
+  .wave div:nth-child(2) { height: 16px; animation-delay: 0.1s; }
+  .wave div:nth-child(3) { height: 12px; animation-delay: 0.2s; }
+  .wave div:nth-child(4) { height: 20px; animation-delay: 0.3s; }
+  .wave div:nth-child(5) { height: 10px; animation-delay: 0.4s; }
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.5); }
+    50% { transform: scaleY(1); }
+  }
+
+  /* ===== CATEGORY TABS ===== */
+  .categories {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    background: white;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    scrollbar-width: none;
+  }
+  .categories::-webkit-scrollbar { display: none; }
+
+  .cat-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 2.5px solid transparent;
+    background: #f0f0f0;
+    cursor: pointer;
+    font-family: 'Heebo', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: all 0.2s;
+    color: #555;
+    flex-shrink: 0;
+  }
+  .cat-btn .cat-icon { font-size: 1.3rem; }
+  .cat-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+
+  .cat-btn.active {
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+  }
+
+  /* Category colors */
+  .cat-btn[data-cat="מועדפים"].active { background: linear-gradient(135deg, #FFD93D, #FF9A3C); }
+  .cat-btn[data-cat="יומיום"].active   { background: linear-gradient(135deg, #6BCB77, #4D9DE0); }
+  .cat-btn[data-cat="פעלים"].active    { background: linear-gradient(135deg, #F7971E, #FFD200); }
+  .cat-btn[data-cat="רגשות"].active    { background: linear-gradient(135deg, #FF6B9D, #FF9A3C); }
+  .cat-btn[data-cat="פעילויות"].active { background: linear-gradient(135deg, #4D9DE0, #7B5EA7); }
+  .cat-btn[data-cat="אוכל"].active     { background: linear-gradient(135deg, #FF9A3C, #FFD93D); }
+  .cat-btn[data-cat="גוף"].active      { background: linear-gradient(135deg, #E15FED, #FF6B9D); }
+  .cat-btn[data-cat="גמילה"].active    { background: linear-gradient(135deg, #43C6AC, #191654); }
+  .cat-btn[data-cat="אסור"].active     { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+  .cat-btn[data-cat="אסור"].active     { background: linear-gradient(135deg, #e52d27, #b31217); }
+  .cat-btn[data-cat="אסור"].active     { background: linear-gradient(135deg, #e55353, #c0392b); }
+  .cat-btn[data-cat="אסור"].active     { background: linear-gradient(135deg, #FF416C, #FF4B2B); }
+
+  /* ===== GRID ===== */
+  .grid-container {
+    padding: 24px 20px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #999;
+    margin-bottom: 16px;
+    padding-right: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  /* ===== CARD ===== */
+  .card {
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow var(--transition), border-color 0.15s;
+    border: 3px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 12px 16px;
+    min-height: 150px;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    animation: cardIn 0.4s ease both;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: scale(0.85) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .card:active {
+    transform: scale(0.92);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  /* Color themes per category */
+  .card[data-cat="יומיום"]   { --card-accent: #6BCB77; }
+  .card[data-cat="פעלים"]    { --card-accent: #F7971E; }
+  .card[data-cat="רגשות"]    { --card-accent: #FF6B9D; }
+  .card[data-cat="פעילויות"] { --card-accent: #4D9DE0; }
+  .card[data-cat="אוכל"]     { --card-accent: #FF9A3C; }
+  .card[data-cat="גוף"]      { --card-accent: #E15FED; }
+  .card[data-cat="גמילה"]    { --card-accent: #43C6AC; }
+  .card[data-cat="אסור"]     { --card-accent: #e74c3c; }
+  .card[data-cat="אסור"]     { --card-accent: #e52d27; }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: var(--card-accent, #ccc);
+    border-radius: 24px 24px 0 0;
+  }
+
+  .card.speaking {
+    border-color: var(--card-accent, #aaa);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--card-accent) 25%, transparent), var(--shadow-hover);
+    transform: translateY(-6px) scale(1.04);
+  }
+
+  .card .emoji {
+    font-size: 3.4rem;
+    line-height: 1;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.12));
+    transition: transform 0.2s;
+  }
+  .card:hover .emoji { transform: scale(1.12); }
+
+  .card .label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2d2d2d;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* Fav button */
+  .fav-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+    padding: 4px;
+    line-height: 1;
+  }
+  .card:hover .fav-btn { opacity: 0.7; }
+  .fav-btn.active { opacity: 1; transform: scale(1.2); }
+
+  /* ===== SENTENCE STRIP ===== */
+  .sentence-strip {
+    background: white;
+    border-top: 3px solid #f0f0f0;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    bottom: 0;
+    z-index: 90;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    min-height: 90px;
+  }
+
+  .sentence-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1;
+    align-items: center;
+    min-height: 60px;
+  }
+
+  .sentence-placeholder {
+    color: #ccc;
+    font-size: 1rem;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .sentence-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #f7f0ff;
+    border: 2px solid #d4b8ff;
+    border-radius: 50px;
+    padding: 6px 12px 6px 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #5a2d9c;
+    cursor: default;
+    transition: transform 0.15s, background 0.15s;
+    animation: chipIn 0.25s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes chipIn {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .sentence-chip .chip-emoji { font-size: 1.3rem; }
+  .sentence-chip .chip-remove {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #bbb;
+    cursor: pointer;
+    padding: 0 0 0 4px;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .sentence-chip .chip-remove:hover { color: #e05; }
+
+  .strip-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .btn-speak-sentence {
+    background: linear-gradient(135deg, #6BCB77, #4D9DE0);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 18px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 12px rgba(77,157,224,0.35);
+    white-space: nowrap;
+  }
+  .btn-speak-sentence:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(77,157,224,0.45); }
+  .btn-speak-sentence:active { transform: scale(0.95); }
+  .btn-speak-sentence:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-clear-sentence {
+    background: #fff0f0;
+    color: #e05;
+    border: 2px solid #ffcccc;
+    border-radius: 50px;
+    padding: 7px 14px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .btn-clear-sentence:hover { background: #ffe0e0; }
+  .btn-clear-sentence:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* Card selected-for-sentence state */
+  .card.in-sentence {
+    border-color: #a855f7;
+    background: #fdf4ff;
+  }
+  .card.in-sentence .card-check {
+    display: flex !important;
+  }
+  .card-check {
+    display: none;
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: #a855f7;
+    color: white;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+  }
+
+  /* Mode toggle */
+  .mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: auto;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50px;
+    padding: 6px 14px;
+  }
+  .mode-toggle label {
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.35);
+    border-radius: 22px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    top: 3px; right: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-slider { background: rgba(255,255,255,0.75); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(-18px); }
+
+  /* ===== EMPTY STATE ===== */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #bbb;
+    font-size: 1.1rem;
+    grid-column: 1/-1;
+  }
+  .empty .big { font-size: 3rem; display: block; margin-bottom: 12px; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 480px) {
+    .cards-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card { min-height: 130px; padding: 16px 8px 12px; }
+    .card .emoji { font-size: 2.8rem; }
+    .card .label { font-size: 0.9rem; }
+    header h1 { font-size: 1.4rem; }
+  }
+
+  @media (max-width: 360px) {
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌟</div>
+  <div>
+    <h1>מילות קסם</h1>
+    <div class="subtitle">לחץ על כרטיסייה כדי לדבר</div>
+  </div>
+  <div class="speaking-bar" id="speakingBar">
+    <div class="wave">
+      <div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <span id="speakingText"></span>
+  </div>
+  <div class="mode-toggle">
+    <label for="modeToggle">
+      <span id="modeLabel">🗣️ דיבור</span>
+      <div class="toggle-switch">
+        <input type="checkbox" id="modeToggle">
+        <span class="toggle-slider"></span>
+      </div>
+      <span>✍️ משפט</span>
+    </label>
+  </div>
+</header>
+
+<nav class="categories" id="categoryNav"></nav>
+
+<main class="grid-container">
+  <div class="section-title" id="sectionTitle"></div>
+  <div class="cards-grid" id="cardsGrid"></div>
+</main>
+
+<!-- SENTENCE STRIP -->
+<div class="sentence-strip" id="sentenceStrip">
+  <div class="sentence-words" id="sentenceWords">
+    <span class="sentence-placeholder" id="sentencePlaceholder">בחר כרטיסיות כדי לבנות משפט...</span>
+  </div>
+  <div class="strip-actions">
+    <button class="btn-speak-sentence" id="btnSpeakSentence" disabled>
+      🔊 קרא משפט
+    </button>
+    <button class="btn-clear-sentence" id="btnClearSentence" disabled>
+      🗑️ נקה
+    </button>
+  </div>
+</div>
+
+<script>
+const CARDS = [
+  // ===== יומיום =====
+  { cat: "יומיום", emoji: "😴", label: "לישון" },
+  { cat: "יומיום", emoji: "⏰", label: "להתעורר" },
+  { cat: "יומיום", emoji: "🍽️", label: "לאכול" },
+  { cat: "יומיום", emoji: "🥤", label: "לשתות" },
+  { cat: "יומיום", emoji: "🚽", label: "שירותים" },
+  { cat: "יומיום", emoji: "👕", label: "להתלבש" },
+  { cat: "יומיום", emoji: "👗", label: "להתפשט" },
+  { cat: "יומיום", emoji: "🚿", label: "להתרחץ" },
+  { cat: "יומיום", emoji: "🛁", label: "אמבטיה" },
+  { cat: "יומיום", emoji: "🦷", label: "לצחצח שיניים" },
+  { cat: "יומיום", emoji: "🧴", label: "לשטוף ידיים" },
+  { cat: "יומיום", emoji: "💇", label: "לסרק שיער" },
+  { cat: "יומיום", emoji: "🎒", label: "ללכת לגן" },
+  { cat: "יומיום", emoji: "🏠", label: "לבית" },
+  { cat: "יומיום", emoji: "🚌", label: "אוטובוס" },
+  { cat: "יומיום", emoji: "🚗", label: "מכונית" },
+  { cat: "יומיום", emoji: "🚶", label: "ללכת" },
+  { cat: "יומיום", emoji: "🛑", label: "לעצור" },
+  { cat: "יומיום", emoji: "🪑", label: "לשבת" },
+  { cat: "יומיום", emoji: "🧹", label: "לסדר" },
+  { cat: "יומיום", emoji: "🛏️", label: "לעשות מיטה" },
+  { cat: "יומיום", emoji: "👜", label: "לארוז תיק" },
+  { cat: "יומיום", emoji: "📱", label: "טלפון" },
+  { cat: "יומיום", emoji: "🌙", label: "לילה טוב" },
+  { cat: "יומיום", emoji: "☀️", label: "בוקר טוב" },
+  { cat: "יומיום", emoji: "🤝", label: "שלום" },
+  { cat: "יומיום", emoji: "👋", label: "להיפרד" },
+  { cat: "יומיום", emoji: "🙏", label: "בבקשה" },
+  { cat: "יומיום", emoji: "✅", label: "תודה" },
+  { cat: "יומיום", emoji: "❌", label: "לא רוצה" },
+  { cat: "יומיום", emoji: "✋", label: "רגע" },
+  { cat: "יומיום", emoji: "👍", label: "כן" },
+  { cat: "יומיום", emoji: "👎", label: "לא" },
+  { cat: "יומיום", emoji: "🔁", label: "עוד פעם" },
+  { cat: "יומיום", emoji: "➡️", label: "ללכת לשם" },
+  { cat: "יומיום", emoji: "🏃", label: "למהר" },
+  { cat: "יומיום", emoji: "🤫", label: "שקט" },
+  { cat: "יומיום", emoji: "📢", label: "לקרוא למישהו" },
+  { cat: "יומיום", emoji: "🤲", label: "לקחת" },
+  { cat: "יומיום", emoji: "🫳", label: "לתת" },
+
+  // ===== פעלים =====
+  { cat: "פעלים", emoji: "👀", label: "לראות" },
+  { cat: "פעלים", emoji: "👂", label: "לשמוע" },
+  { cat: "פעלים", emoji: "👃", label: "להריח" },
+  { cat: "פעלים", emoji: "👅", label: "לטעום" },
+  { cat: "פעלים", emoji: "🤲", label: "לגעת" },
+  { cat: "פעלים", emoji: "🗣️", label: "לדבר" },
+  { cat: "פעלים", emoji: "🤔", label: "לחשוב" },
+  { cat: "פעלים", emoji: "😴", label: "לנוח" },
+  { cat: "פעלים", emoji: "🏃", label: "לרוץ" },
+  { cat: "פעלים", emoji: "🚶", label: "ללכת" },
+  { cat: "פעלים", emoji: "⬆️", label: "לעלות" },
+  { cat: "פעלים", emoji: "⬇️", label: "לרדת" },
+  { cat: "פעלים", emoji: "↩️", label: "לחזור" },
+  { cat: "פעלים", emoji: "🫳", label: "לשים" },
+  { cat: "פעלים", emoji: "🤲", label: "לקחת" },
+  { cat: "פעלים", emoji: "🔓", label: "לפתוח" },
+  { cat: "פעלים", emoji: "🔒", label: "לסגור" },
+  { cat: "פעלים", emoji: "🔍", label: "לחפש" },
+  { cat: "פעלים", emoji: "📣", label: "לקרוא" },
+  { cat: "פעלים", emoji: "✋", label: "לעצור" },
+  { cat: "פעלים", emoji: "🫂", label: "לחבק" },
+  { cat: "פעלים", emoji: "😘", label: "לנשק" },
+  { cat: "פעלים", emoji: "👋", label: "לנפנף" },
+  { cat: "פעלים", emoji: "🤗", label: "לפגוש" },
+  { cat: "פעלים", emoji: "🧺", label: "לנקות" },
+  { cat: "פעלים", emoji: "🛒", label: "לקנות" },
+  { cat: "פעלים", emoji: "💰", label: "לשלם" },
+  { cat: "פעלים", emoji: "🎁", label: "לתת מתנה" },
+  { cat: "פעלים", emoji: "📷", label: "לצלם" },
+  { cat: "פעלים", emoji: "🖨️", label: "להדפיס" },
+  { cat: "פעלים", emoji: "✂️", label: "לגזור" },
+  { cat: "פעלים", emoji: "🔧", label: "לתקן" },
+  { cat: "פעלים", emoji: "🎯", label: "לנסות" },
+  { cat: "פעלים", emoji: "⏸️", label: "להפסיק" },
+  { cat: "פעלים", emoji: "▶️", label: "להתחיל" },
+  { cat: "פעלים", emoji: "🔄", label: "להחליף" },
+  { cat: "פעלים", emoji: "🗑️", label: "לזרוק" },
+  { cat: "פעלים", emoji: "📦", label: "לארוז" },
+  { cat: "פעלים", emoji: "🕐", label: "לחכות" },
+  { cat: "פעלים", emoji: "🏠", label: "להישאר" },
+
+  // ===== רגשות =====
+  { cat: "רגשות", emoji: "😄", label: "שמח" },
+  { cat: "רגשות", emoji: "😢", label: "עצוב" },
+  { cat: "רגשות", emoji: "😡", label: "כועס" },
+  { cat: "רגשות", emoji: "😨", label: "מפוחד" },
+  { cat: "רגשות", emoji: "😴", label: "עייף" },
+  { cat: "רגשות", emoji: "🤒", label: "כואב לי" },
+  { cat: "רגשות", emoji: "🤗", label: "רוצה חיבוק" },
+  { cat: "רגשות", emoji: "😮", label: "מופתע" },
+  { cat: "רגשות", emoji: "😐", label: "סתם" },
+  { cat: "רגשות", emoji: "🥰", label: "אוהב" },
+  { cat: "רגשות", emoji: "😤", label: "מתוסכל" },
+  { cat: "רגשות", emoji: "🥺", label: "צריך עזרה" },
+  { cat: "רגשות", emoji: "😌", label: "רגוע" },
+  { cat: "רגשות", emoji: "🤩", label: "נרגש" },
+  { cat: "רגשות", emoji: "😳", label: "מביך" },
+  { cat: "רגשות", emoji: "🤔", label: "לא יודע" },
+  { cat: "רגשות", emoji: "😒", label: "משועמם" },
+  { cat: "רגשות", emoji: "🤧", label: "לא מרגיש טוב" },
+  { cat: "רגשות", emoji: "😎", label: "מגניב" },
+  { cat: "רגשות", emoji: "🙈", label: "לא רוצה לראות" },
+  { cat: "רגשות", emoji: "🙉", label: "רועש לי" },
+  { cat: "רגשות", emoji: "💪", label: "יכול לבד" },
+  { cat: "רגשות", emoji: "🫶", label: "אכפת לי" },
+  { cat: "רגשות", emoji: "😇", label: "טוב" },
+  { cat: "רגשות", emoji: "🥱", label: "רוצה מנוחה" },
+  { cat: "רגשות", emoji: "😰", label: "לחוץ" },
+  { cat: "רגשות", emoji: "🫠", label: "לא נעים לי" },
+  { cat: "רגשות", emoji: "🤯", label: "יותר מדי" },
+  { cat: "רגשות", emoji: "😑", label: "לא רוצה עכשיו" },
+  { cat: "רגשות", emoji: "🥳", label: "יש חגיגה" },
+
+  // ===== פעילויות =====
+  { cat: "פעילויות", emoji: "🎮", label: "לשחק" },
+  { cat: "פעילויות", emoji: "🎨", label: "לצייר" },
+  { cat: "פעילויות", emoji: "🖌️", label: "לצבוע" },
+  { cat: "פעילויות", emoji: "✂️", label: "לגזור" },
+  { cat: "פעילויות", emoji: "📐", label: "להדביק" },
+  { cat: "פעילויות", emoji: "📚", label: "לקרוא" },
+  { cat: "פעילויות", emoji: "✏️", label: "לכתוב" },
+  { cat: "פעילויות", emoji: "📺", label: "לצפות בטלוויזיה" },
+  { cat: "פעילויות", emoji: "🏃", label: "לרוץ" },
+  { cat: "פעילויות", emoji: "🎵", label: "לשיר" },
+  { cat: "פעילויות", emoji: "🎹", label: "לנגן" },
+  { cat: "פעילויות", emoji: "💃", label: "לרקוד" },
+  { cat: "פעילויות", emoji: "⚽", label: "כדורגל" },
+  { cat: "פעילויות", emoji: "🏀", label: "כדורסל" },
+  { cat: "פעילויות", emoji: "🧩", label: "פאזל" },
+  { cat: "פעילויות", emoji: "🚴", label: "אופניים" },
+  { cat: "פעילויות", emoji: "🛴", label: "קורקינט" },
+  { cat: "פעילויות", emoji: "🏊", label: "לשחות" },
+  { cat: "פעילויות", emoji: "🤸", label: "להתגמנסט" },
+  { cat: "פעילויות", emoji: "🧘", label: "לנוח בשקט" },
+  { cat: "פעילויות", emoji: "🌳", label: "לצאת החוצה" },
+  { cat: "פעילויות", emoji: "🏖️", label: "לים" },
+  { cat: "פעילויות", emoji: "🧸", label: "לשחק עם בובה" },
+  { cat: "פעילויות", emoji: "🎲", label: "משחק קופסה" },
+  { cat: "פעילויות", emoji: "🃏", label: "קלפים" },
+  { cat: "פעילויות", emoji: "🫧", label: "לנפח בועות" },
+  { cat: "פעילויות", emoji: "🪀", label: "לזרוק כדור" },
+  { cat: "פעילויות", emoji: "🎭", label: "להתחפש" },
+  { cat: "פעילויות", emoji: "🍳", label: "לבשל" },
+  { cat: "פעילויות", emoji: "🌱", label: "לגנן" },
+  { cat: "פעילויות", emoji: "🧱", label: "לבנות" },
+  { cat: "פעילויות", emoji: "🪆", label: "לשחק בחול" },
+  { cat: "פעילויות", emoji: "🎪", label: "לטייל" },
+  { cat: "פעילויות", emoji: "🛝", label: "מגלשה" },
+  { cat: "פעילויות", emoji: "🪁", label: "לטוס עפיפון" },
+  { cat: "פעילויות", emoji: "🧶", label: "לצור מחמר" },
+  { cat: "פעילויות", emoji: "🎤", label: "קריוקי" },
+  { cat: "פעילויות", emoji: "🌈", label: "לצייר קשת" },
+  { cat: "פעילויות", emoji: "🔦", label: "לחקור" },
+  { cat: "פעילויות", emoji: "🤼", label: "להתאבק" },
+
+  // ===== אוכל =====
+  { cat: "אוכל", emoji: "🍞", label: "לחם" },
+  { cat: "אוכל", emoji: "🥪", label: "כריך" },
+  { cat: "אוכל", emoji: "🍎", label: "תפוח" },
+  { cat: "אוכל", emoji: "🍊", label: "תפוז" },
+  { cat: "אוכל", emoji: "🍇", label: "ענבים" },
+  { cat: "אוכל", emoji: "🍓", label: "תות" },
+  { cat: "אוכל", emoji: "🍌", label: "בננה" },
+  { cat: "אוכל", emoji: "🥝", label: "קיווי" },
+  { cat: "אוכל", emoji: "🥛", label: "חלב" },
+  { cat: "אוכל", emoji: "🧃", label: "מיץ" },
+  { cat: "אוכל", emoji: "💧", label: "מים" },
+  { cat: "אוכל", emoji: "🍪", label: "עוגיות" },
+  { cat: "אוכל", emoji: "🎂", label: "עוגה" },
+  { cat: "אוכל", emoji: "🍝", label: "פסטה" },
+  { cat: "אוכל", emoji: "🍚", label: "אורז" },
+  { cat: "אוכל", emoji: "🧀", label: "גבינה" },
+  { cat: "אוכל", emoji: "🥚", label: "ביצה" },
+  { cat: "אוכל", emoji: "🍕", label: "פיצה" },
+  { cat: "אוכל", emoji: "🍔", label: "המבורגר" },
+  { cat: "אוכל", emoji: "🌽", label: "תירס" },
+  { cat: "אוכל", emoji: "🥕", label: "גזר" },
+  { cat: "אוכל", emoji: "🍅", label: "עגבנייה" },
+  { cat: "אוכל", emoji: "🥒", label: "מלפפון" },
+  { cat: "אוכל", emoji: "🍦", label: "גלידה" },
+  { cat: "אוכל", emoji: "🍫", label: "שוקולד" },
+  { cat: "אוכל", emoji: "🥣", label: "דגני בוקר" },
+  { cat: "אוכל", emoji: "🥗", label: "סלט" },
+  { cat: "אוכל", emoji: "🥞", label: "פנקייק" },
+  { cat: "אוכל", emoji: "🍗", label: "עוף" },
+  { cat: "אוכל", emoji: "🥜", label: "חמאת בוטנים" },
+
+  // ===== גוף =====
+  { cat: "גוף", emoji: "🤕", label: "כאב ראש" },
+  { cat: "גוף", emoji: "🤢", label: "בטן כואבת" },
+  { cat: "גוף", emoji: "🦶", label: "רגל כואבת" },
+  { cat: "גוף", emoji: "👂", label: "אוזן כואבת" },
+  { cat: "גוף", emoji: "👁️", label: "עין כואבת" },
+  { cat: "גוף", emoji: "🖐️", label: "יד כואבת" },
+  { cat: "גוף", emoji: "🦷", label: "שן כואבת" },
+  { cat: "גוף", emoji: "💊", label: "תרופה" },
+  { cat: "גוף", emoji: "🩹", label: "פלסטר" },
+  { cat: "גוף", emoji: "😤", label: "קשה לנשום" },
+  { cat: "גוף", emoji: "🤧", label: "נזלת" },
+  { cat: "גוף", emoji: "🤮", label: "בחילה" },
+  { cat: "גוף", emoji: "🌡️", label: "חום" },
+  { cat: "גוף", emoji: "💉", label: "זריקה" },
+  { cat: "גוף", emoji: "🩺", label: "רופא" },
+  { cat: "גוף", emoji: "🏥", label: "בית חולים" },
+  { cat: "גוף", emoji: "😵", label: "סחרחורת" },
+  { cat: "גוף", emoji: "😰", label: "מזיע" },
+  { cat: "גוף", emoji: "🥶", label: "קר לי" },
+  { cat: "גוף", emoji: "🥵", label: "חם לי" },
+  { cat: "גוף", emoji: "🦴", label: "עצם" },
+  { cat: "גוף", emoji: "❤️", label: "לב" },
+  { cat: "גוף", emoji: "🫁", label: "ריאות" },
+  { cat: "גוף", emoji: "🧠", label: "מוח" },
+  { cat: "גוף", emoji: "👃", label: "אף" },
+
+  // ===== גמילה =====
+  { cat: "גמילה", emoji: "🚽", label: "אני צריך לשירותים" },
+  { cat: "גמילה", emoji: "💧", label: "צריך לעשות פיפי" },
+  { cat: "גמילה", emoji: "💩", label: "צריך לעשות קקי" },
+  { cat: "גמילה", emoji: "🩲", label: "תחתון" },
+  { cat: "גמילה", emoji: "👶", label: "חיתול" },
+  { cat: "גמילה", emoji: "✅", label: "עשיתי בשירותים" },
+  { cat: "גמילה", emoji: "❌", label: "לא הצלחתי" },
+  { cat: "גמילה", emoji: "🧻", label: "נייר טואלט" },
+  { cat: "גמילה", emoji: "🚿", label: "לשטוף" },
+  { cat: "גמילה", emoji: "🧼", label: "סבון" },
+  { cat: "גמילה", emoji: "🙋", label: "הרגשתי לפני" },
+  { cat: "גמילה", emoji: "😔", label: "עשיתי בתחתון" },
+  { cat: "גמילה", emoji: "🌟", label: "כל הכבוד לי" },
+  { cat: "גמילה", emoji: "⏰", label: "ללכת עכשיו" },
+  { cat: "גמילה", emoji: "🪑", label: "לשבת על האסלה" },
+  { cat: "גמילה", emoji: "⏳", label: "לחכות קצת" },
+  { cat: "גמילה", emoji: "👍", label: "הצלחתי" },
+  { cat: "גמילה", emoji: "🤰", label: "הבטן לחוצה" },
+  { cat: "גמילה", emoji: "😣", label: "קשה לי" },
+  { cat: "גמילה", emoji: "🆘", label: "דחוף" },
+  { cat: "גמילה", emoji: "🏃", label: "לרוץ לשירותים" },
+  { cat: "גמילה", emoji: "🌙", label: "בלילה גם" },
+  { cat: "גמילה", emoji: "🛡️", label: "מגן לילה" },
+  { cat: "גמילה", emoji: "🎉", label: "יופי שניסיתי" },
+  { cat: "גמילה", emoji: "💪", label: "אני מתאמן" },
+
+  // ===== אסור =====
+  // פגיעה בגוף
+  { cat: "אסור", emoji: "🦵", label: "לא לבעוט" },
+  { cat: "אסור", emoji: "👊", label: "לא להרביץ" },
+  { cat: "אסור", emoji: "🤚", label: "לא לסטור" },
+  { cat: "אסור", emoji: "🦷", label: "לא לנשוך" },
+  { cat: "אסור", emoji: "🖐️", label: "לא לדחוף" },
+  { cat: "אסור", emoji: "🤏", label: "לא לצבוט" },
+  { cat: "אסור", emoji: "💇", label: "לא למשוך שיער" },
+  { cat: "אסור", emoji: "👆", label: "לא לגרד" },
+  { cat: "אסור", emoji: "🤜", label: "לא לאגרוף" },
+  { cat: "אסור", emoji: "🙅", label: "לא לפגוע בעצמי" },
+  { cat: "אסור", emoji: "🤐", label: "לא לירוק" },
+  { cat: "אסור", emoji: "😝", label: "לא להוציא לשון" },
+  { cat: "אסור", emoji: "🫳", label: "לא לסטור ביד פתוחה" },
+  { cat: "אסור", emoji: "🧠", label: "לא לנגוח בראש" },
+  { cat: "אסור", emoji: "🦶", label: "לא לדרוך על מישהו" },
+  { cat: "אסור", emoji: "🫂", label: "לא לחנוק" },
+  // זריקה ושבירה
+  { cat: "אסור", emoji: "🏺", label: "לא לזרוק חפצים" },
+  { cat: "אסור", emoji: "🪑", label: "לא לזרוק כיסא" },
+  { cat: "אסור", emoji: "🍽️", label: "לא לזרוק אוכל" },
+  { cat: "אסור", emoji: "🧸", label: "לא לשבור צעצועים" },
+  { cat: "אסור", emoji: "🪟", label: "לא לשבור חלון" },
+  { cat: "אסור", emoji: "🖥️", label: "לא לשבור מסך" },
+  { cat: "אסור", emoji: "📱", label: "לא להשליך טלפון" },
+  { cat: "אסור", emoji: "🥛", label: "לא לשפוך" },
+  { cat: "אסור", emoji: "📚", label: "לא לקרוע ספרים" },
+  { cat: "אסור", emoji: "🖊️", label: "לא לשבור עפרונות" },
+  { cat: "אסור", emoji: "🧩", label: "לא לזרוק חלקי פאזל" },
+  { cat: "אסור", emoji: "🪞", label: "לא לשבור מראה" },
+  // קולות והתנהגות
+  { cat: "אסור", emoji: "💢", label: "לא לצרוח" },
+  { cat: "אסור", emoji: "🙉", label: "לא לצעוק" },
+  { cat: "אסור", emoji: "🤬", label: "לא לקלל" },
+  { cat: "אסור", emoji: "😤", label: "לא לפרוץ בבכי" },
+  { cat: "אסור", emoji: "😾", label: "לא לרטון" },
+  { cat: "אסור", emoji: "🗣️", label: "לא לנבח על אנשים" },
+  { cat: "אסור", emoji: "👂", label: "לא לצעוק לתוך אוזן" },
+  // בריחה וגבולות
+  { cat: "אסור", emoji: "🏃", label: "לא לברוח" },
+  { cat: "אסור", emoji: "🚪", label: "לא לצאת מהחדר" },
+  { cat: "אסור", emoji: "🧍", label: "לא לעזוב את המקום" },
+  { cat: "אסור", emoji: "🚗", label: "לא לרוץ לכביש" },
+  { cat: "אסור", emoji: "🛒", label: "לא לברוח בסופר" },
+  { cat: "אסור", emoji: "🏫", label: "לא לצאת מהכיתה" },
+  { cat: "אסור", emoji: "🚶", label: "לא ללכת לבד" },
+  // לקיחה ורכוש
+  { cat: "אסור", emoji: "🤲", label: "לא לקחת בלי רשות" },
+  { cat: "אסור", emoji: "🍬", label: "לא לקחת אוכל בלי רשות" },
+  { cat: "אסור", emoji: "👜", label: "לא לפתוח תיק של אחר" },
+  { cat: "אסור", emoji: "🎒", label: "לא לפתוח תיק של חבר" },
+  { cat: "אסור", emoji: "🖊️", label: "לא לקחת ציוד של אחר" },
+  { cat: "אסור", emoji: "📱", label: "לא לגעת בטלפון של אחר" },
+  { cat: "אסור", emoji: "🍫", label: "לא לגנוב ממתקים" },
+  // אינטרנט ומסכים
+  { cat: "אסור", emoji: "⏰", label: "לא להישאר יותר מדי על מסך" },
+  { cat: "אסור", emoji: "🌐", label: "לא לגלוש בלי רשות" },
+  // בזמן אכילה ושגרה
+  { cat: "אסור", emoji: "🌀", label: "לא להסתובב בזמן אכילה" },
+  { cat: "אסור", emoji: "🛏️", label: "לא לקפוץ על המיטה" },
+  { cat: "אסור", emoji: "🧱", label: "לא לטפס על רהיטים" },
+  { cat: "אסור", emoji: "🚿", label: "לא לשחק עם מים בשירותים" },
+  { cat: "אסור", emoji: "🍽️", label: "לא לשחק באוכל" },
+  { cat: "אסור", emoji: "💡", label: "לא לגעת בחשמל" },
+  { cat: "אסור", emoji: "🔥", label: "לא לגעת בגז" },
+  { cat: "אסור", emoji: "🧴", label: "לא לשתות חומרים" },
+  // חלופות חיוביות
+  { cat: "אסור", emoji: "🗣️", label: "במקום — לדבר" },
+  { cat: "אסור", emoji: "✋", label: "במקום — לעצור ולנשום" },
+  { cat: "אסור", emoji: "🥺", label: "במקום — לבקש עזרה" },
+  { cat: "אסור", emoji: "🚶", label: "במקום — ללכת להתקרר" },
+  { cat: "אסור", emoji: "🤗", label: "במקום — לבקש חיבוק" },
+  { cat: "אסור", emoji: "🎨", label: "במקום — לצייר את הכעס" },
+  { cat: "אסור", emoji: "🛋️", label: "במקום — לשבת בפינה שקטה" },
+];
+
+const CATEGORIES = [
+  { name: "מועדפים",  icon: "⭐" },
+  { name: "יומיום",   icon: "☀️" },
+  { name: "פעלים",    icon: "🤲" },
+  { name: "רגשות",    icon: "❤️" },
+  { name: "פעילויות", icon: "🎯" },
+  { name: "אוכל",     icon: "🍎" },
+  { name: "גוף",      icon: "🩺" },
+  { name: "גמילה",    icon: "🚽" },
+  { name: "אסור",     icon: "🚫" },
+];
+
+let favorites = JSON.parse(localStorage.getItem('aac_favorites') || '[]');
+let currentCat = "יומיום";
+let speakingCard = null;
+let sentenceMode = false;
+let sentence = []; // array of {emoji, label}
+
+// Build category nav
+const nav = document.getElementById('categoryNav');
+CATEGORIES.forEach(cat => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-btn' + (cat.name === currentCat ? ' active' : '');
+  btn.dataset.cat = cat.name;
+  btn.innerHTML = `<span class="cat-icon">${cat.icon}</span>${cat.name}`;
+  btn.addEventListener('click', () => selectCat(cat.name));
+  nav.appendChild(btn);
+});
+
+function selectCat(name) {
+  currentCat = name;
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.cat === name);
+  });
+  renderCards();
+}
+
+function renderCards() {
+  const grid = document.getElementById('cardsGrid');
+  const title = document.getElementById('sectionTitle');
+  grid.innerHTML = '';
+
+  let cards;
+  if (currentCat === 'מועדפים') {
+    cards = CARDS.filter(c => favorites.includes(c.label));
+    title.textContent = favorites.length ? `${favorites.length} פריטים מועדפים` : '';
+  } else {
+    cards = CARDS.filter(c => c.cat === currentCat);
+    title.textContent = `${cards.length} פריטים`;
+  }
+
+  if (cards.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = '<span class="big">⭐</span>לחץ על הכוכב בכרטיסייה כדי להוסיף למועדפים';
+    grid.appendChild(empty);
+    return;
+  }
+
+  cards.forEach((card, i) => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.dataset.cat = card.cat;
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-label', `${card.label}, לחץ לשמיעה`);
+    el.setAttribute('tabindex', '0');
+    el.style.animationDelay = `${i * 0.05}s`;
+
+    const isFav = favorites.includes(card.label);
+    const isInSentence = sentence.some(s => s.label === card.label);
+    el.innerHTML = `
+      <div class="card-check">✓</div>
+      <button class="fav-btn ${isFav ? 'active' : ''}" aria-label="הוסף למועדפים" title="מועדף">⭐</button>
+      <div class="emoji">${card.emoji}</div>
+      <div class="label">${card.label}</div>
+    `;
+    if (isInSentence) el.classList.add('in-sentence');
+
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.fav-btn')) return;
+      if (sentenceMode) {
+        addToSentence(card, el);
+      } else {
+        speak(card.label, el);
+      }
+    });
+
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        if (sentenceMode) addToSentence(card, el);
+        else speak(card.label, el);
+      }
+    });
+
+    el.querySelector('.fav-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFav(card.label, el.querySelector('.fav-btn'));
+    });
+
+    grid.appendChild(el);
+  });
+}
+
+function toggleFav(label, btn) {
+  const idx = favorites.indexOf(label);
+  if (idx === -1) {
+    favorites.push(label);
+    btn.classList.add('active');
+  } else {
+    favorites.splice(idx, 1);
+    btn.classList.remove('active');
+    if (currentCat === 'מועדפים') renderCards();
+  }
+  localStorage.setItem('aac_favorites', JSON.stringify(favorites));
+}
+
+function speak(text, cardEl) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  if (speakingCard) speakingCard.classList.remove('speaking');
+  speakingCard = cardEl;
+  if (cardEl) cardEl.classList.add('speaking');
+
+  const bar = document.getElementById('speakingBar');
+  const speakingText = document.getElementById('speakingText');
+  bar.classList.add('active');
+  speakingText.textContent = text;
+
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'he-IL';
+    utterance.rate = 0.85;
+    utterance.pitch = 1.1;
+
+    const voices = window.speechSynthesis.getVoices();
+    const heVoice = voices.find(v => v.lang.startsWith('he'));
+    if (heVoice) utterance.voice = heVoice;
+
+    utterance.onend = () => {
+      if (cardEl) cardEl.classList.remove('speaking');
+      bar.classList.remove('active');
+      speakingCard = null;
+    };
+
+    utterance.onerror = () => {
+      if (cardEl) cardEl.classList.remove('speaking');
+      bar.classList.remove('active');
+      speakingCard = null;
+    };
+
+    window.speechSynthesis.speak(utterance);
+  } else {
+    setTimeout(() => {
+      if (cardEl) cardEl.classList.remove('speaking');
+      bar.classList.remove('active');
+      speakingCard = null;
+    }, 1500);
+  }
+}
+
+// ===== SENTENCE MODE =====
+const modeToggle = document.getElementById('modeToggle');
+const sentenceStrip = document.getElementById('sentenceStrip');
+const sentenceWords = document.getElementById('sentenceWords');
+const sentencePlaceholder = document.getElementById('sentencePlaceholder');
+const btnSpeak = document.getElementById('btnSpeakSentence');
+const btnClear = document.getElementById('btnClearSentence');
+
+modeToggle.addEventListener('change', () => {
+  sentenceMode = modeToggle.checked;
+  sentenceStrip.style.borderTopColor = sentenceMode ? '#a855f7' : '#f0f0f0';
+  document.querySelectorAll('.card').forEach(c => {
+    c.style.cursor = sentenceMode ? 'copy' : 'pointer';
+  });
+});
+
+function addToSentence(card, el) {
+  sentence.push({ emoji: card.emoji, label: card.label });
+  el.classList.add('in-sentence');
+  renderSentenceStrip();
+  // small bounce feedback
+  el.style.transform = 'scale(0.92)';
+  setTimeout(() => el.style.transform = '', 150);
+}
+
+function renderSentenceStrip() {
+  sentenceWords.innerHTML = '';
+  if (sentence.length === 0) {
+    sentenceWords.appendChild(sentencePlaceholder);
+    btnSpeak.disabled = true;
+    btnClear.disabled = true;
+    return;
+  }
+  btnSpeak.disabled = false;
+  btnClear.disabled = false;
+
+  sentence.forEach((item, idx) => {
+    const chip = document.createElement('div');
+    chip.className = 'sentence-chip';
+    chip.innerHTML = `
+      <span class="chip-emoji">${item.emoji}</span>
+      <span>${item.label}</span>
+      <button class="chip-remove" title="הסר">✕</button>
+    `;
+    chip.querySelector('.chip-remove').addEventListener('click', () => {
+      sentence.splice(idx, 1);
+      renderSentenceStrip();
+      // un-highlight cards with this label if none left
+      const stillIn = sentence.some(s => s.label === item.label);
+      if (!stillIn) {
+        document.querySelectorAll('.card.in-sentence').forEach(c => {
+          if (c.querySelector('.label').textContent === item.label) {
+            c.classList.remove('in-sentence');
+          }
+        });
+      }
+    });
+    sentenceWords.appendChild(chip);
+  });
+}
+
+btnSpeak.addEventListener('click', () => {
+  if (sentence.length === 0) return;
+  const text = sentence.map(s => s.label).join(' ');
+  speak(text, null);
+});
+
+btnClear.addEventListener('click', () => {
+  sentence = [];
+  renderSentenceStrip();
+  document.querySelectorAll('.card.in-sentence').forEach(c => c.classList.remove('in-sentence'));
+});
+
+// Load voices async
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.addEventListener('voiceschanged', () => {
+    window.speechSynthesis.getVoices();
+  });
+}
+
+renderCards();
+</script>
+</body>
+</html>
