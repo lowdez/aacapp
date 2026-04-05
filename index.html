@@ -475,6 +475,27 @@
   .toggle-switch input:checked + .toggle-slider { background: rgba(255,255,255,0.75); }
   .toggle-switch input:checked + .toggle-slider::before { transform: translateX(-18px); }
 
+  /* ===== BUILDER CARDS ===== */
+  .card.builder-card {
+    background: linear-gradient(150deg, #f3eeff 0%, #ede0ff 100%);
+    border: 2.5px solid #c4a0ff;
+    --card-accent: #7c3aed;
+  }
+  .card.builder-card .label {
+    color: #4c1d95;
+    font-size: 1.2rem;
+    font-weight: 900;
+  }
+  .card.builder-card .emoji {
+    font-size: 2.6rem;
+  }
+  .card.builder-card::before {
+    background: linear-gradient(90deg, #7c3aed, #a855f7);
+  }
+  .card.builder-card::after {
+    content: '';
+  }
+
   /* ===== EMPTY STATE ===== */
   .empty {
     text-align: center;
@@ -550,6 +571,12 @@
 <script>
 const CARDS = [
   // ===== יומיום =====
+  // builder
+  { cat: "יומיום", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "יומיום", builder: true, emoji: "💚", label: "רוצה" },
+  { cat: "יומיום", builder: true, emoji: "🤔", label: "צריך" },
+  { cat: "יומיום", builder: true, emoji: "➡️", label: "ל" },
+  { cat: "יומיום", builder: true, emoji: "☀️", label: "עכשיו" },
   { cat: "יומיום", emoji: "😴", label: "לישון" },
   { cat: "יומיום", emoji: "⏰", label: "להתעורר" },
   { cat: "יומיום", emoji: "🍽️", label: "לאכול" },
@@ -592,7 +619,12 @@ const CARDS = [
   { cat: "יומיום", emoji: "🫳", label: "לתת" },
 
   // ===== פעלים =====
-  // חושים ותפיסה
+  // builder
+  { cat: "פעלים", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "פעלים", builder: true, emoji: "💪", label: "יכול" },
+  { cat: "פעלים", builder: true, emoji: "🚫", label: "לא יכול" },
+  { cat: "פעלים", builder: true, emoji: "🤝", label: "עם" },
+  { cat: "פעלים", builder: true, emoji: "➡️", label: "ל" },
   { cat: "פעלים", emoji: "👀", label: "לראות" },
   { cat: "פעלים", emoji: "👁️", label: "להסתכל על" },
   { cat: "פעלים", emoji: "🔭", label: "להביט מרחוק" },
@@ -749,6 +781,11 @@ const CARDS = [
   { cat: "פעלים", emoji: "🪜", label: "לעלות מדרגות" },
 
   // ===== רגשות =====
+  // builder
+  { cat: "רגשות", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "רגשות", builder: true, emoji: "😌", label: "מרגיש" },
+  { cat: "רגשות", builder: true, emoji: "🙅", label: "לא אוהב" },
+  { cat: "רגשות", builder: true, emoji: "❤️", label: "אוהב" },
   { cat: "רגשות", emoji: "😄", label: "שמח" },
   { cat: "רגשות", emoji: "😢", label: "עצוב" },
   { cat: "רגשות", emoji: "😡", label: "כועס" },
@@ -781,6 +818,12 @@ const CARDS = [
   { cat: "רגשות", emoji: "🥳", label: "יש חגיגה" },
 
   // ===== פעילויות =====
+  // builder
+  { cat: "פעילויות", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "פעילויות", builder: true, emoji: "💚", label: "רוצה" },
+  { cat: "פעילויות", builder: true, emoji: "🙅", label: "לא רוצה" },
+  { cat: "פעילויות", builder: true, emoji: "🤝", label: "עם" },
+  { cat: "פעילויות", builder: true, emoji: "⏳", label: "אחר כך" },
   { cat: "פעילויות", emoji: "🎮", label: "לשחק" },
   { cat: "פעילויות", emoji: "🎨", label: "לצייר" },
   { cat: "פעילויות", emoji: "🖌️", label: "לצבוע" },
@@ -823,6 +866,12 @@ const CARDS = [
   { cat: "פעילויות", emoji: "🤼", label: "להתאבק" },
 
   // ===== אוכל =====
+  // builder
+  { cat: "אוכל", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "אוכל", builder: true, emoji: "💚", label: "רוצה לאכול" },
+  { cat: "אוכל", builder: true, emoji: "🙅", label: "לא רוצה" },
+  { cat: "אוכל", builder: true, emoji: "🔍", label: "מחפש" },
+  { cat: "אוכל", builder: true, emoji: "🍽️", label: "עוד" },
   { cat: "אוכל", emoji: "🍞", label: "לחם" },
   { cat: "אוכל", emoji: "🥪", label: "כריך" },
   { cat: "אוכל", emoji: "🍎", label: "תפוח" },
@@ -855,6 +904,11 @@ const CARDS = [
   { cat: "אוכל", emoji: "🥜", label: "חמאת בוטנים" },
 
   // ===== גוף =====
+  // builder
+  { cat: "גוף", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "גוף", builder: true, emoji: "🤕", label: "כואב לי ב" },
+  { cat: "גוף", builder: true, emoji: "🤔", label: "צריך" },
+  { cat: "גוף", builder: true, emoji: "🆘", label: "עזרה" },
   { cat: "גוף", emoji: "🤕", label: "כאב ראש" },
   { cat: "גוף", emoji: "🤢", label: "בטן כואבת" },
   { cat: "גוף", emoji: "🦶", label: "רגל כואבת" },
@@ -882,6 +936,11 @@ const CARDS = [
   { cat: "גוף", emoji: "👃", label: "אף" },
 
   // ===== גמילה =====
+  // builder
+  { cat: "גמילה", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "גמילה", builder: true, emoji: "🤔", label: "צריך" },
+  { cat: "גמילה", builder: true, emoji: "🆘", label: "דחוף" },
+  { cat: "גמילה", builder: true, emoji: "✅", label: "הצלחתי" },
   { cat: "גמילה", emoji: "🚽", label: "אני צריך לשירותים" },
   { cat: "גמילה", emoji: "💧", label: "צריך לעשות פיפי" },
   { cat: "גמילה", emoji: "💩", label: "צריך לעשות קקי" },
@@ -909,6 +968,11 @@ const CARDS = [
   { cat: "גמילה", emoji: "💪", label: "אני מתאמן" },
 
   // ===== בוקר - להתארגן לגן =====
+  // builder
+  { cat: "בוקר", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "בוקר", builder: true, emoji: "✅", label: "סיימתי" },
+  { cat: "בוקר", builder: true, emoji: "⏳", label: "עוד רגע" },
+  { cat: "בוקר", builder: true, emoji: "🤔", label: "צריך" },
   { cat: "בוקר", emoji: "⏰", label: "להתעורר" },
   { cat: "בוקר", emoji: "☀️", label: "בוקר טוב" },
   { cat: "בוקר", emoji: "🛏️", label: "לקום מהמיטה" },
@@ -941,6 +1005,11 @@ const CARDS = [
   { cat: "בוקר", emoji: "✅", label: "סיימתי" },
 
   // ===== לילה - להתארגן לישון =====
+  // builder
+  { cat: "לילה", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "לילה", builder: true, emoji: "💚", label: "רוצה" },
+  { cat: "לילה", builder: true, emoji: "🙅", label: "לא רוצה" },
+  { cat: "לילה", builder: true, emoji: "🤔", label: "צריך" },
   { cat: "לילה", emoji: "🌙", label: "זמן שינה" },
   { cat: "לילה", emoji: "📺", label: "לכבות טלוויזיה" },
   { cat: "לילה", emoji: "📱", label: "לכבות מסך" },
@@ -973,7 +1042,11 @@ const CARDS = [
   { cat: "לילה", emoji: "❌", label: "אני לא עייף" },
 
   // ===== אסור =====
-  // פגיעה בגוף
+  // builder
+  { cat: "אסור", builder: true, emoji: "🙋", label: "אני" },
+  { cat: "אסור", builder: true, emoji: "😤", label: "מרגיש כעס" },
+  { cat: "אסור", builder: true, emoji: "✋", label: "אני עוצר" },
+  { cat: "אסור", builder: true, emoji: "💬", label: "במקום" },
   { cat: "אסור", emoji: "🦵", label: "לא לבעוט" },
   { cat: "אסור", emoji: "👊", label: "לא להרביץ" },
   { cat: "אסור", emoji: "🤚", label: "לא לסטור" },
@@ -1047,63 +1120,10 @@ const CARDS = [
   { cat: "אסור", emoji: "🤗", label: "במקום — לבקש חיבוק" },
   { cat: "אסור", emoji: "🎨", label: "במקום — לצייר את הכעס" },
   { cat: "אסור", emoji: "🛋️", label: "במקום — לשבת בפינה שקטה" },
-  // ===== בניית משפט =====
-  // גוף ראשון / שני / שלישי
-  { cat: "משפט", emoji: "🙋", label: "אני" },
-  { cat: "משפט", emoji: "👦", label: "אתה" },
-  { cat: "משפט", emoji: "👧", label: "את" },
-  { cat: "משפט", emoji: "👨", label: "הוא" },
-  { cat: "משפט", emoji: "👩", label: "היא" },
-  { cat: "משפט", emoji: "👨‍👩‍👧‍👦", label: "הם" },
-  { cat: "משפט", emoji: "👫", label: "אנחנו" },
-  { cat: "משפט", emoji: "👨‍👦", label: "אבא" },
-  { cat: "משפט", emoji: "👩‍👦", label: "אמא" },
-  // פעלי עזר / רצון
-  { cat: "משפט", emoji: "💚", label: "רוצה" },
-  { cat: "משפט", emoji: "❤️", label: "אוהב" },
-  { cat: "משפט", emoji: "💪", label: "יכול" },
-  { cat: "משפט", emoji: "🚫", label: "לא יכול" },
-  { cat: "משפט", emoji: "🔍", label: "מחפש" },
-  { cat: "משפט", emoji: "👀", label: "מסתכל" },
-  { cat: "משפט", emoji: "🤔", label: "צריך" },
-  { cat: "משפט", emoji: "❌", label: "לא רוצה" },
-  { cat: "משפט", emoji: "😊", label: "אוהב לשחק" },
-  { cat: "משפט", emoji: "😌", label: "מרגיש" },
-  { cat: "משפט", emoji: "🙅", label: "לא אוהב" },
-  { cat: "משפט", emoji: "🏃", label: "הולך ל" },
-  { cat: "משפט", emoji: "✅", label: "סיים" },
-  { cat: "משפט", emoji: "▶️", label: "רוצה להתחיל" },
-  // מילות כיוון ויחס
-  { cat: "משפט", emoji: "⬆️", label: "על" },
-  { cat: "משפט", emoji: "🤝", label: "עם" },
-  { cat: "משפט", emoji: "📍", label: "ב" },
-  { cat: "משפט", emoji: "➡️", label: "ל" },
-  { cat: "משפט", emoji: "⬅️", label: "מ" },
-  { cat: "משפט", emoji: "🔄", label: "של" },
-  { cat: "משפט", emoji: "📌", label: "ליד" },
-  { cat: "משפט", emoji: "🔙", label: "אחרי" },
-  { cat: "משפט", emoji: "⏩", label: "לפני" },
-  { cat: "משפט", emoji: "⬇️", label: "מתחת" },
-  // מילות זמן
-  { cat: "משפט", emoji: "☀️", label: "עכשיו" },
-  { cat: "משפט", emoji: "⏳", label: "אחר כך" },
-  { cat: "משפט", emoji: "⏰", label: "מוקדם" },
-  { cat: "משפט", emoji: "🌙", label: "בלילה" },
-  { cat: "משפט", emoji: "🌅", label: "בבוקר" },
-  { cat: "משפט", emoji: "🔁", label: "שוב" },
-  { cat: "משפט", emoji: "🛑", label: "אחרי זה" },
-  // שאלות
-  { cat: "משפט", emoji: "❓", label: "מה" },
-  { cat: "משפט", emoji: "🗺️", label: "איפה" },
-  { cat: "משפט", emoji: "🕐", label: "מתי" },
-  { cat: "משפט", emoji: "👤", label: "מי" },
-  { cat: "משפט", emoji: "💡", label: "למה" },
-  { cat: "משפט", emoji: "🔢", label: "כמה" },
 ];
 
 const CATEGORIES = [
   { name: "מועדפים",  icon: "⭐" },
-  { name: "משפט",     icon: "🔤" },
   { name: "בוקר",     icon: "🌅" },
   { name: "לילה",     icon: "🌙" },
   { name: "יומיום",   icon: "☀️" },
@@ -1168,9 +1188,15 @@ function renderCards() {
     return;
   }
 
-  cards.forEach((card, i) => {
+  // Sort: builder cards first, then regular cards
+  const sorted = [
+    ...cards.filter(c => c.builder),
+    ...cards.filter(c => !c.builder),
+  ];
+
+  sorted.forEach((card, i) => {
     const el = document.createElement('div');
-    el.className = 'card';
+    el.className = 'card' + (card.builder ? ' builder-card' : '');
     el.dataset.cat = card.cat;
     el.setAttribute('role', 'button');
     el.setAttribute('aria-label', `${card.label}, לחץ לשמיעה`);
